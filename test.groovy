@@ -16,4 +16,4 @@ def removeTextBeforeFirstSlash(String imageName) {
 // Example usage:
 def imageName = "docker.io/conftest/this/image:v1"
 def modifiedImageName = removeTextBeforeFirstSlash(imageName)
-println modifiedImageName
+println println modifiedImageName.replaceAll(/[\/-]/, '_').split(":")[0]
