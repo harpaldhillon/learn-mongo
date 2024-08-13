@@ -6,3 +6,10 @@ index=log_index "Finished: SUCCESS" OR "Finished: FAILURE"
 index=your_index_name sourcetype=your_sourcetype_name
 | rex field=_raw "Number of nodes: (?<node_count>\d+)"
 | table node_count
+
+index=your_index_name sourcetype=your_sourcetype_name
+| rex field=_raw "Number of nodes: (?<node_count>\d+)"
+| stats sum(node_count) as total_nodes
+| eval label="Nodes"
+| chart values(total_nodes) by label
+
