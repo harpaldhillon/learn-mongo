@@ -13,3 +13,7 @@ index=your_index_name sourcetype=your_sourcetype_name
 | eval label="Nodes"
 | chart values(total_nodes) by label
 
+index=your_index_name sourcetype=your_sourcetype_name
+| rex field=_raw "Successfully promoted image (?<image>\S+) to PROD"
+| table image
+
