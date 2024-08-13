@@ -1,3 +1,8 @@
 index=log_index "Finished: SUCCESS" OR "Finished: FAILURE"
 | eval status=if(searchmatch("Finished: SUCCESS"), "SUCCESS", "FAILURE")
 | timechart span=2h count by status
+
+
+index=your_index_name sourcetype=your_sourcetype_name
+| rex field=_raw "Number of nodes: (?<node_count>\d+)"
+| table node_count
