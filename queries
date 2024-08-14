@@ -17,3 +17,6 @@ index=your_index_name sourcetype=your_sourcetype_name
 | rex field=_raw "Successfully promoted image (?<image>\S+) to PROD"
 | table image
 
+index=your_index_name sourcetype=your_sourcetype_name
+| eval date=strftime(_time, "%Y-%m-%d")
+| table date _time
