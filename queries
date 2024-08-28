@@ -20,3 +20,7 @@ index=your_index_name sourcetype=your_sourcetype_name
 index=your_index_name sourcetype=your_sourcetype_name
 | eval date=strftime(_time, "%Y-%m-%d")
 | table date _time
+
+
+index=<your_index> "INFO :: Push Image Map"
+| rex field=_raw "\[(?<image_value>[^\]]+)\]"
