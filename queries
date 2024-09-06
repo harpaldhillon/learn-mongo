@@ -27,3 +27,5 @@ index=<your_index> "INFO :: Push Image Map"
 
 index=<your_index> "INFO :: Push Image Map"
 | rex field=_raw "\[(?<image_value>[^:]+:[^:]+):true\]"
+
+index="log_index" "data:" | rex field=_raw "data:(?<json_data>\{.*\})" | spath input=json_data| search distro|table name csi|where ("$csi_id$"=="" OR csi="$csi_id$")
