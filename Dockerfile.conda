@@ -1,0 +1,31 @@
+# ---- Stage 1: Build and install Miniconda ----
+FROM registry.access.redhat.com/ubi9/ubi-minimal:9.6-1758184547 AS builder
+
+ENV PATH=/opt/conda/bin:$PATH
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+# Install build dependencies
+RUN microdnf install -y wget bzip2 ca-certificates git shadow-utils && \
+    microdnf clean all
+
+# Install Miniconda
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py313_25.7.0-2-Linux-x86_64.sh -O /tmp/miniconda.sh && \
+    /bin/bash /tmp/miniconda.sh -b -p /opt/conda && \
+    rm /tmp/miniconda.sh && conda clean -a -y
+
+# ---- Stage 2: Minimal runtime ----
+FROM registry.access.redhat.com/ubi9/ubi-minimal:9.6-1758184547
+
+ENV PATH=/opt/conda/bin:$PATH
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+# Copy only conda runtime from builder
+COPY --from=builder /opt/conda /opt/conda
+
+# tini for clean process handling
+ENV TINI_VERSION=v0.16.1
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
+RUN chmod +x /usr/bin/tini
+
+ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["/bin/bash"]
