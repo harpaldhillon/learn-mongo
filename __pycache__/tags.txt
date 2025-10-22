@@ -1,0 +1,1 @@
+repo="mcr.microsoft.com/tunnel/gateway/server"; latest_digest=$(skopeo inspect docker://$repo:latest | jq -r .Digest); skopeo list-tags docker://$repo | jq -r '.Tags[]' | while read tag; do [ "$(skopeo inspect docker://$repo:$tag | jq -r .Digest)" = "$latest_digest" ] && echo "latest → $tag"; done
