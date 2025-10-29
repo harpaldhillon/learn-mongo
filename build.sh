@@ -32,4 +32,7 @@ module com.example.hello {
     requires java.base;
 }
 
+find /home -type f -size +50M -exec ls -lh {} \;
+du -h /path/to/search | grep '[0-9\.]\+M' | awk '$1+0 > 50'
+du -ah /path/to/search | sort -hr | head -n 10
 find /path/to/search -size +50M -exec du -h {} + | sort -hr
