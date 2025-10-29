@@ -31,3 +31,5 @@ module-info.java
 module com.example.hello {
     requires java.base;
 }
+
+find /path/to/search -size +50M -exec du -h {} + | sort -hr
