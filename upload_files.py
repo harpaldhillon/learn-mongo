@@ -54,3 +54,13 @@ if __name__ == "__main__":
     print("Uploading files to S3...")
     upload_files_to_s3()
 
+
+awk '
+    /-$/ {
+        printf "%s", $0;   # print the line ending with "-"
+        next               # skip newline
+    }
+    {
+        print               # print normal lines
+    }
+' file
