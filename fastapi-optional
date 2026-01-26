@@ -1,0 +1,56 @@
+from fastapi import FastAPI, Body
+from pydantic import BaseModel
+from typing import Optional, Union
+
+app = FastAPI()
+
+class Message(BaseModel):
+    text: str
+    priority: Optional[int] = None
+
+@app.post("/send")
+async def send_message(
+        image_name: str,
+        message: Union[Message, dict, None] = Body(
+            default=None,
+            example={}
+        )
+):
+    if message == {}:
+        message = None
+
+    if message is None:
+        return {
+            "image_name": image_name,
+            "received": False,
+            "reason": "No request body provided"
+        }
+
+    return {
+        "image_name": image_name,
+        "received": True,
+        "text": message.text,
+        "priority": message.priority
+    }
+
+
+---
+FROM python:3.11-slim
+
+RUN apt-get update && apt-get install curl -y
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY main.py .
+
+EXPOSE 8000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+---
+fastapi
+uvicorn[standard]
+
