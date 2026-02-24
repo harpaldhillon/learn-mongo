@@ -1,0 +1,93 @@
+{
+  "image": "app:v1",
+  "type": "application",
+  "age": "3 months",
+  "created_at": "2025-11-01",
+  "parent": {
+    "image": "middle:v1",
+    "type": "middleware",
+    "age": "12 months",
+    "created_at": "2025-02-01",
+    "parent": {
+      "image": "base:v1",
+      "type": "base",
+      "age": "18 months",
+      "created_at": "2024-08-01",
+      "parent": null
+    }
+  }
+}
+For developers, this reads naturally:
+
+app → built on → middleware → built on → base
+
+No need to understand layers, digests, or manifests.
+
+{
+  "image": "app:v1",
+  "display_name": "Application Image",
+  "type": "application",
+  "age": "3 months",
+  "age_days": 90,
+  "status": "healthy",
+  "parent": {
+    "image": "middle:v1",
+    "display_name": "Python Middleware",
+    "type": "middleware",
+    "age": "12 months",
+    "age_days": 365,
+    "status": "warning",
+    "parent": {
+      "image": "base:v1",
+      "display_name": "Base OS Image",
+      "type": "base",
+      "age": "18 months",
+      "age_days": 540,
+      "status": "critical",
+      "parent": null
+    }
+  }
+}
+
+
+{
+  "nodes": [
+    {
+      "id": "base:v1",
+      "type": "base",
+      "age": "18 months",
+      "status": "critical"
+    },
+    {
+      "id": "middle:v1",
+      "type": "middleware",
+      "age": "12 months",
+      "status": "warning"
+    },
+    {
+      "id": "app:v1",
+      "type": "application",
+      "age": "3 months",
+      "status": "healthy"
+    }
+  ],
+  "edges": [
+    { "from": "middle:v1", "to": "base:v1" },
+    { "from": "app:v1", "to": "middle:v1" }
+  ]
+}
+
+1. Show a vertical chain:
+App (3 months) ✅
+  ↓
+Middleware (12 months) ⚠️
+  ↓
+Base (18 months) 🔴
+
+2. Use color rules:
+
+🟢 < 6 months → healthy
+
+🟡 6–12 months → warning
+
+🔴 > 12 months → outdated
